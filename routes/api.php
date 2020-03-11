@@ -15,20 +15,21 @@ use Illuminate\Http\Request;
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     $customer = new \App\Customer();
-
     return $request->user();
 });
 
-Route::group(['prefix' => 'auth'], function(){
-   Route::post('login','AuthController@login')->name('auth.login');
-   Route::post('logout','AuthController@logout')->name('auth.logout');
-   Route::get('me','AuthController@me')->name('auth.me');
+Route::group(['prefix' => 'auth', 'namespace' => 'Auth\Http\Controllers'], function(){
+    Route::post('login','AuthController@login')->name('auth.login');
+    Route::post('logout','AuthController@logout')->name('auth.logout');
+    Route::get('me','AuthController@me')->name('auth.me');
 });
 
-Route::prefix('customers')->group(function () {
+Route::group(['prefix' => 'customers','customers','namespace' => 'Customer\Http\Controllers'], function () {
     Route::post('', 'CustomerController@store')->name('customers.store');
     Route::put('{customer}','CustomerController@update')->name('customers.update');
+    Route::delete('', 'CustomerController@destroy')->name('customers.destroy');
     Route::get('', 'CustomerController@index')->name('customers.list');
     Route::get('all', 'CustomerController@all')->name('customers.all');
     Route::get('{id}', 'CustomerController@show')->name('customers.show');
+
 });
